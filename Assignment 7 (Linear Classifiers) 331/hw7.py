@@ -6,7 +6,14 @@ import matplotlib.pyplot as plt
 import scipy.io as sio
 
 def get_data():
-    pass
+    """
+    this function takes no arguments and returns two arrays: X, a 70, 000×784 2D array, and
+    y, a 1D array with 70,000 elements.
+    """
+    x = sio.loadmat('mnist-original.mat')['data'].T
+    y = sio.loadmat('mnist-original.mat')['label']
+
+    return x, y
 
 def get_train_and_test_sets(x, y):
     pass
