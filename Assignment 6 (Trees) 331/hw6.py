@@ -48,6 +48,7 @@ def make_and_test_tree(train_X, train_y, test_X, test_y, m_depth):
     print("\nConfusion matrix for forest:")
     print(confusion_matrix(preds_forest, test_y))
 
+
 def main():
     # train, test = get_classification_frames()
 

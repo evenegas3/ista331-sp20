@@ -66,7 +66,15 @@ def probability_matrix(cm):
     return cm
 
 def plot_probability_matrices(pm1, pm2, pm3):
-    pass
+    fig, (pm1, pm2, pm3) = plt.subplots(3)
+    fig.suptitle('Vertically stacked subplots')
+    pm1.set_title('Linear SVM')
+    pm2.set_title('Logistic Regression')
+    pm3.set_title('Polynomial SVM')
+
+    # pm1.plot(x, y)
+    # pm2.plot(x, y)
+    # pm3.plot(x, y)
 
 def main():
     x, y = get_data()
@@ -80,8 +88,12 @@ def main():
     lr_cm = confusion_matrix(lr, X_test, y_test)
     svm_cm = confusion_matrix(svm, X_test, y_test)
 
+    # plot_probability_matrices(sgd_cm, lr_cm, svm_cm)
+
     # for mod in (('Linear SVM:', probability_matrix(sgd_cm)), ('Logistic Regression:', probability_matrix(lr_cm)), ('Polynomial SVM:', probability_matrix(svm_cm))):
     #     print(*mod, sep = '\n')
+
+    # plt.show()
 
 if __name__ == "__main__":
     main()
