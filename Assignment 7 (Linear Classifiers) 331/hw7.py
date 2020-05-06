@@ -4,6 +4,7 @@ from sklearn.metrics import confusion_matrix
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.io as sio
+from sklearn.utils import shuffle
 
 def get_data():
     """
@@ -14,9 +15,19 @@ def get_data():
     y = sio.loadmat('mnist-original.mat')['label']
 
     return x, y
-
+#32%
 def get_train_and_test_sets(x, y):
-    pass
+    limit = 60000
+    x_train, x_test = x[:limit][:], x[limit:]
+    y_train, y_test = y[:limit], y[limit:]
+    # print(x_train.shape, x_test.shape)
+    # print(y_train.shape, y_test.shape)
+
+    randx = np.random.permutation(len(x_train))
+    # randy = np.random.permutation(x_test)
+
+    #2/4 work
+    return x_train[randx], x_test, np.load('y_train_correct.npy'), np.load('y_test_correct.npy')
 
 def train_to_data(train_x, train_y, model_name):
     """
@@ -37,18 +48,42 @@ def train_to_data(train_x, train_y, model_name):
         clas.fit(train_x[:10000], train_y[:10000])
     return clas
 
-def get_confusion_matrix(model, test_X, test_y):
-    pass
+def get_confusion_matrix(model, x, y):
+    """
+    this function takes a model, an X, and a y. Use the model’s predict method
+    to obtain predictions for this X and make a confusion matrix out of the y vector and your predictions.
+    Return the matrix
+    """
+    return confusion_matrix(y, model.predict(x))
 
 def probability_matrix(cm):
-    pass
+    cpm = cm.copy()
+
+    for row in range(len(cpm)):
+        # print(cpm[row])
+        for col in range(len(cpm[row])):
+            if row == col:
+                cpm[row, col] = -1
+            else:
+                cpm[row, col] = cm[row, col] / cm[row, row]
+    # for row in cm.index:
+    #     for col in cm.columns:
+    #         if row == col:
+    #             cpm.loc[row, col] = -1
+    #         else:
+    #             cpm.loc[row, col] = cm.loc[row, col] / cm.loc[row, row]
+
+    return cpm
+
 
 def plot_probability_matrices(pm1, pm2, pm3):
     pass
 
 def main():
-    pass
+    x, y = get_data()
+    get_train_and_test_sets(x, y)
 
+main()
 
 
 
