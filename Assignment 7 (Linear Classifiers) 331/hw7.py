@@ -66,15 +66,17 @@ def probability_matrix(cm):
     return cm
 
 def plot_probability_matrices(pm1, pm2, pm3):
-    fig, (pm1, pm2, pm3) = plt.subplots(3)
-    fig.suptitle('Vertically stacked subplots')
-    pm1.set_title('Linear SVM')
-    pm2.set_title('Logistic Regression')
-    pm3.set_title('Polynomial SVM')
+    fig, (lin, logreg, poly) = plt.subplots(1, 3)
 
-    # pm1.plot(x, y)
-    # pm2.plot(x, y)
-    # pm3.plot(x, y)
+    lin.matshow(pm1, cmap='binary')
+    lin.set_title('Linear SVM\n')
+
+    logreg.matshow(pm2, cmap='binary')
+    logreg.set_title('Logistic Regression\n')
+
+    poly.matshow(pm3, cmap='binary')
+    poly.set_title('Polynomial SVM\n')
+
 
 def main():
     x, y = get_data()
@@ -84,16 +86,20 @@ def main():
     lr = train_to_data(X_train, y_train, 'LogisticRegression')
     svm = train_to_data(X_train, y_train, 'SVM')
 
-    sgd_cm = confusion_matrix(sgd, X_test, y_test)
-    lr_cm = confusion_matrix(lr, X_test, y_test)
-    svm_cm = confusion_matrix(svm, X_test, y_test)
+    sgd_cm = get_confusion_matrix(sgd, x, y)
+    lr_cm = get_confusion_matrix(lr, x, y)
+    svm_cm = get_confusion_matrix(svm, x, y)
 
-    # plot_probability_matrices(sgd_cm, lr_cm, svm_cm)
+    m1 = probability_matrix(sgd_cm)
+    m2 = probability_matrix(lr_cm)
+    m3 = probability_matrix(svm_cm)
 
-    # for mod in (('Linear SVM:', probability_matrix(sgd_cm)), ('Logistic Regression:', probability_matrix(lr_cm)), ('Polynomial SVM:', probability_matrix(svm_cm))):
-    #     print(*mod, sep = '\n')
+    plot_probability_matrices(m1, m2, m3)
 
-    # plt.show()
+    for mod in (('Linear SVM:', probability_matrix(sgd_cm)), ('Logistic Regression:', probability_matrix(lr_cm)), ('Polynomial SVM:', probability_matrix(svm_cm))):
+        print(*mod, sep = '\n')
+
+    plt.show()
 
 if __name__ == "__main__":
     main()
