@@ -15,6 +15,7 @@ def get_data():
     y = sio.loadmat('mnist-original.mat')['label']
 
     return x, y
+
 #32%
 def get_train_and_test_sets(x, y):
     limit = 60000
@@ -58,22 +59,21 @@ def get_confusion_matrix(model, x, y):
 
 def probability_matrix(cm):
     cpm = cm.copy()
+    pm_correct = np.load('probability_matrix_SGD_correct.npy')
+    print(pm_correct)
+    print('\n')
 
-    for row in range(len(cpm)):
-        # print(cpm[row])
-        for col in range(len(cpm[row])):
-            if row == col:
-                cpm[row, col] = -1
-            else:
-                cpm[row, col] = cm[row, col] / cm[row, row]
-    # for row in cm.index:
-    #     for col in cm.columns:
+
+    print(cpm)
+    # for row in cm:
+    #     for col in row:
     #         if row == col:
     #             cpm.loc[row, col] = -1
     #         else:
     #             cpm.loc[row, col] = cm.loc[row, col] / cm.loc[row, row]
 
-    return cpm
+    # return cpm
+
 
 
 def plot_probability_matrices(pm1, pm2, pm3):
@@ -81,9 +81,21 @@ def plot_probability_matrices(pm1, pm2, pm3):
 
 def main():
     x, y = get_data()
-    get_train_and_test_sets(x, y)
+    X_train, X_test, y_train, y_test = get_train_and_test_sets(x, y)
+    
+    sgd = train_to_data(X_train, y_train, 'SGD')
+    lr = train_to_data(X_train, y_train, 'LogisticRegression')
+    svm = train_to_data(X_train, y_train, 'SVM')
 
-main()
+
+    sgd_cm = confusion_matrix(sgd, X_test, y_test)
+    lr_cm = confusion_matrix(lr, X_test, y_test)
+    svm_cm = confusion_matrix(svm, X_test, y_test)
+
+    for mod in (('Linear SVM:', probability_matrix(sgd_cm)), ('Logistic Regression:', probability_matrix(lr_cm)), ('Polynomial SVM:', probability_matrix(svm_cm))):
+        print(*mod, sep = '\n')
+
+# main()
 
 
 
