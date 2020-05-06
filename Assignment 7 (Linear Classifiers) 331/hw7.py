@@ -8,10 +8,16 @@ import scipy.io as sio
 def get_data():
     print('5')
 
+def get_train_and_test_sets(X, y):
+    pass
 
+def train_to_data(x,y,z):
+    # X[:100], y[:100], 'SGD'
+    pass
 
 def main():
     print('$')
-    
-if __name__ == "__main__":
-    main()
+
+main()    
+# if __name__ == "__main__":
+#     main()
