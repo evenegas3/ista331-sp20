@@ -13,26 +13,21 @@ def get_data():
     this function takes no arguments and returns two arrays: X, a 70, 000×784 2D array, and
     y, a 1D array with 70,000 elements.
     """
-    x = sio.loadmat('mnist-original.mat')['data'].T
-    y = sio.loadmat('mnist-original.mat')['label']
-    print(x.shape, y.shape)
+    d = sio.loadmat('mnist-original.mat')
+    x = d['data'].T
+    y = d['label'][0]
+
     return x, y
 
-#32%
-def get_train_and_test_sets(x, y):
+def get_train_and_test_sets(X, y):
     limit = 60000
-    x_train = x[:limit][:]
-    x_test = x[limit:]
+    x_train = X[:limit]
+    x_test = X[limit:]
     y_train = y[:limit]
     y_test = y[limit:]
-    # print(x_train.shape, x_test.shape)
-    # print(y_train.shape, y_test.shape)
+    randx = np.random.permutation(limit)
 
-    randx = np.random.permutation(len(x_train))
-    # randy = np.random.permutation(x_test)
-
-    #2/4 work
-    return x_train[randx], x_test, np.load('y_train_correct.npy'), np.load('y_test_correct.npy')
+    return x_train[randx], x_test, y_train[randx], y_test
 
 def train_to_data(train_x, train_y, model_name):
     """
@@ -61,24 +56,14 @@ def get_confusion_matrix(model, x, y):
     """
     return confusion_matrix(y, model.predict(x))
 
-def probability_matrix(data):
-    count_mtrx = pd.DataFrame(data=data, columns=list(string.ascii_lowercase)[:10], index=list(string.ascii_lowercase)[:10])
-    pm_correct = np.load('probability_matrix_SGD_correct.npy')
-    print(pm_correct)
+def probability_matrix(cm):
+    cm = cm.astype('float')
 
-    df = pd.DataFrame(columns=count_mtrx.columns, index=count_mtrx.columns).fillna(0)
-    for row in count_mtrx:
-        for col in count_mtrx:
-            prob = count_mtrx.loc[row, col] / count_mtrx.loc[row, row]
-            df.loc[row, col] = round(prob,3)
-    print('mine')
-    # print(df)
-    print(df.to_numpy())
-    # return df
+    for i in range(len(cm)):
+        cm[i] = cm[i] / sum(cm[i])
+    cm = cm.round(3)
 
-
-probability_matrix(np.load('confusion_matrix_SGD_correct.npy'))
-
+    return cm
 
 def plot_probability_matrices(pm1, pm2, pm3):
     pass
@@ -87,62 +72,16 @@ def main():
     x, y = get_data()
     X_train, X_test, y_train, y_test = get_train_and_test_sets(x, y)
     
-    # sgd = train_to_data(X_train, y_train, 'SGD')
-    # lr = train_to_data(X_train, y_train, 'LogisticRegression')
-    # svm = train_to_data(X_train, y_train, 'SVM')
+    sgd = train_to_data(X_train, y_train, 'SGD')
+    lr = train_to_data(X_train, y_train, 'LogisticRegression')
+    svm = train_to_data(X_train, y_train, 'SVM')
 
-
-    # sgd_cm = confusion_matrix(sgd, X_test, y_test)
-    # lr_cm = confusion_matrix(lr, X_test, y_test)
-    # svm_cm = confusion_matrix(svm, X_test, y_test)
+    sgd_cm = confusion_matrix(sgd, X_test, y_test)
+    lr_cm = confusion_matrix(lr, X_test, y_test)
+    svm_cm = confusion_matrix(svm, X_test, y_test)
 
     # for mod in (('Linear SVM:', probability_matrix(sgd_cm)), ('Logistic Regression:', probability_matrix(lr_cm)), ('Polynomial SVM:', probability_matrix(svm_cm))):
     #     print(*mod, sep = '\n')
 
-# main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # oil_test = oil.drop(train_idx)
-    # limit = 60000
-    # x_training, x_testing = x[:limit][:], x[limit:]
-    # y_training, y_testing = y[:limit], y[limit:]
-    # print(x_training.shape, x_testing.shape)
-    # print(y_training.shape, y_testing.shape)
-
-    # x_indices = np.random.permutation(x_training)
-    # y_indices = np.random.permutation(y_training)
-    # return x_training, x_testing, y_training, y_testing
-
-
-    # X_train_correct = np.load('X_train_correct.npy')
-    # X_test_correct = np.load('X_test_correct.npy')
-    # y_train_correct = np.load('y_train_correct.npy')
-    # y_test_correct = np.load('y_test_correct.npy')
-    # return X_train_correct, X_test_correct, y_train_correct, y_test_correct
-# main()    
+if __name__ == "__main__":
+    main()
