@@ -4,28 +4,12 @@ from hw6 import *
 import pandas as pd, numpy as np, time, random
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.tree import DecisionTreeRegressor
-from sklearn.tree import export_graphviz
 from sklearn.model_selection import cross_val_score
 from sklearn.ensemble import RandomForestRegressor
-# import graphviz
 from compare_pandas import *
 
-# import warnings
-# warnings.filterwarnings("ignore", category=FutureWarning)
-
-"""
-GRADING!!!!  Discuss rubric with SL's about plots each semester.
-There is a test for the make_and_plot_tree function.  If plots don't 
-show up when test is run, -20.  If they're not correct, -15.
-"""
-
-"""
-Files required:
-hw5.py, cars_and_temps_f19A.csv, cars_and_temps_f19B.csv
-compare_pandas.py
-binned_ys_correct.pkl, clean_frame_correct.pkl, get_frame_correct.pkl
-X_correct.pkl, y_correct.pkl, main_out.pkl
-"""
+import warnings
+warnings.filterwarnings("ignore", category=FutureWarning)
 
 class TestAssignment6(unittest.TestCase):
     """
@@ -142,25 +126,26 @@ class TestAssignment6(unittest.TestCase):
         train_y = pd.read_pickle('correct_reg_train_y.pkl')
         test_X = pd.read_pickle('correct_reg_test_X.pkl')
         test_y = pd.read_pickle('correct_reg_test_y.pkl')
-        np.random.seed(73)
         
+        np.random.seed(73)
         dtr = DecisionTreeRegressor(max_depth = 8)
         dtr.fit(train_X, train_y)
         rfr = RandomForestRegressor(n_estimators = 25, max_depth = 12)
         rfr.fit(train_X, train_y)
         with io.StringIO() as buf, redirect_stdout(buf):
             self.maxDiff = 1000
-            self.assertIsNone(compare_regressors(train_X, test_X, train_y, test_y, [dtr, rfr]))
+
+            self.assertIsNone(compare_regressors(train_X, train_y, test_X, test_y, [dtr, rfr]))
             correct = '-----------------------------------\n' + \
                       'Model type:   DecisionTreeRegressor\n' + \
                       'Depth:        8\n' + \
                       'R^2:          0.6629\n' + \
-                      'RMSE:         1035.9812\n' + \
+                      'Testing RMSE: 32.1867\n' + \
                       '-----------------------------------\n' + \
                       'Model type:   RandomForestRegressor\n' + \
                       'Depth:        12\n' + \
                       'R^2:          0.8338\n' + \
-                      'RMSE:         838.5398\n'
+                      'Testing RMSE: 28.9576\n'
             retval = buf.getvalue()
             self.assertEqual(correct, retval)
             

@@ -27,27 +27,50 @@ def get_X_and_y(df):
 
     return x, y
 
+def plot_confusion_matrix(train_X, train_y, test_X, test_y, m_depth):
+    pass
+    # txls = np.random
+    # matrix_1_correct = pd.read_pickle('matrix_1_correct.pkl')
+    # print('want')
+    # print(matrix_1_correct)
+    # print('\n')
+
+    # cls_tree = DecisionTreeClassifier(max_depth = m_depth)
+    # # cls_forest = RandomForestClassifier(n_estimators = 500, max_depth = 4)
+    # cls_forest = DecisionTreeClassifier(max_depth = m_depth)
+
+    # cls_tree.fit(train_X, train_y)
+    # cls_forest.fit(train_X, train_y)
+
+    # preds_tree = cls_tree.predict(test_X)
+    # preds_forest = cls_forest.predict(test_X)
+
+    # print("Confusion matrix for tree:")
+    # print(confusion_matrix(preds_tree, test_y))
+    # print("\nConfusion matrix for forest:")
+    # print(confusion_matrix(preds_forest, test_y))
 def make_and_test_tree(train_X, train_y, test_X, test_y, m_depth):
-    matrix_1_correct = pd.read_pickle('matrix_1_correct.pkl')
-    print('want')
-    print(matrix_1_correct)
-    print('\n')
-
     cls_tree = DecisionTreeClassifier(max_depth = m_depth)
-    # cls_forest = RandomForestClassifier(n_estimators = 500, max_depth = 4)
-    cls_forest = DecisionTreeClassifier(max_depth = m_depth)
-
     cls_tree.fit(train_X, train_y)
-    cls_forest.fit(train_X, train_y)
+    y_predict = cls_tree.predict(test_X)
 
-    preds_tree = cls_tree.predict(test_X)
-    preds_forest = cls_forest.predict(test_X)
+    return confusion_matrix(test_y, y_predict)
 
-    print("Confusion matrix for tree:")
-    print(confusion_matrix(preds_tree, test_y))
-    print("\nConfusion matrix for forest:")
-    print(confusion_matrix(preds_forest, test_y))
+def get_regression_frame():
+    return pd.read_csv('bikes.csv')
     
+def get_regression_X_and_y(data):
+    lis = [x for x in range(len(data))]
+    dropped = ['casual', 'cnt', 'datetime', 'registered']
+    choice = np.random.choice(lis, size=15000, replace=False)
+
+    train_x, test_x = data.iloc[choice], data.drop(choice)
+    train_y, test_y = train_x['casual'], test_x['casual']
+    
+    train_x, test_x = train_x.drop(columns=dropped), test_x.drop(columns=dropped)
+
+    return train_x, test_x, train_y, test_y
+
 def make_depth_plot(x, y, max_depth, model_type):
     averages = np.zeros(max_depth) 
     error = np.zeros(max_depth) 
@@ -70,6 +93,7 @@ def make_depth_plot(x, y, max_depth, model_type):
     return np.argmax(averages)+1
 
 def main():
+    pass
     # train, test = get_classification_frames()
 
     train_X = pd.read_pickle('train_X_correct.pkl')
@@ -88,10 +112,5 @@ def main():
 
 
 
-# main()
-
-
-
-
-
-# make_depth_plot()
+if  __name__ == "__main__":
+    main()

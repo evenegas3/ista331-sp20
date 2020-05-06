@@ -12,6 +12,10 @@ def get_data():
     """
     this function takes no arguments and returns two arrays: X, a 70, 000×784 2D array, and
     y, a 1D array with 70,000 elements.
+
+    PARAMETERS: N/A
+
+    RETURNS: x
     """
     d = sio.loadmat('mnist-original.mat')
     x = d['data'].T
