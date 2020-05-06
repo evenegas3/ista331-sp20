@@ -16,23 +16,17 @@ def get_data():
     d = sio.loadmat('mnist-original.mat')
     x = d['data'].T
     y = d['label'][0]
-    # print(x.shape, y.shape)
+
     return x, y
 
-#32%
 def get_train_and_test_sets(X, y):
     limit = 60000
     x_train = X[:limit]
     x_test = X[limit:]
     y_train = y[:limit]
     y_test = y[limit:]
-    # print(x_train.shape, x_test.shape)
-    # print(y_train.shape, y_test.shape)
-
     randx = np.random.permutation(limit)
-    # randy = np.random.permutation(x_test)
 
-    #2/4 work
     return x_train[randx], x_test, y_train[randx], y_test
 
 def train_to_data(train_x, train_y, model_name):
@@ -63,31 +57,13 @@ def get_confusion_matrix(model, x, y):
     return confusion_matrix(y, model.predict(x))
 
 def probability_matrix(cm):
-    # pass
-    # pm_copy = cm.copy()
     cm = cm.astype('float')
-    
+
     for i in range(len(cm)):
         cm[i] = cm[i] / sum(cm[i])
-        
     cm = cm.round(3)
+
     return cm
-    # count_mtrx = pd.DataFrame(data=cm, columns=list(string.ascii_lowercase)[:10], index=list(string.ascii_lowercase)[:10])
-    # pm_correct = np.load('probability_matrix_SGD_correct.npy')
-    # print(pm_correct)
-
-    # df = pd.DataFrame(columns=count_mtrx.columns, index=count_mtrx.columns).fillna(0)
-    # for row in count_mtrx:
-    #     for col in count_mtrx:
-    #         prob = count_mtrx.loc[row, col] / count_mtrx.loc[row, row]
-    #         df.loc[row, col] = round(prob, 3)
-
-    # print('\nmine')
-    # print(df)
-    # print(df.to_numpy())
-
-# probability_matrix(np.load('confusion_matrix_SGD_correct.npy'))
-
 
 def plot_probability_matrices(pm1, pm2, pm3):
     pass
@@ -104,54 +80,8 @@ def main():
     lr_cm = confusion_matrix(lr, X_test, y_test)
     svm_cm = confusion_matrix(svm, X_test, y_test)
 
-    for mod in (('Linear SVM:', probability_matrix(sgd_cm)), ('Logistic Regression:', probability_matrix(lr_cm)), ('Polynomial SVM:', probability_matrix(svm_cm))):
-        print(*mod, sep = '\n')
+    # for mod in (('Linear SVM:', probability_matrix(sgd_cm)), ('Logistic Regression:', probability_matrix(lr_cm)), ('Polynomial SVM:', probability_matrix(svm_cm))):
+    #     print(*mod, sep = '\n')
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # oil_test = oil.drop(train_idx)
-    # limit = 60000
-    # x_training, x_testing = x[:limit][:], x[limit:]
-    # y_training, y_testing = y[:limit], y[limit:]
-    # print(x_training.shape, x_testing.shape)
-    # print(y_training.shape, y_testing.shape)
-
-    # x_indices = np.random.permutation(x_training)
-    # y_indices = np.random.permutation(y_training)
-    # return x_training, x_testing, y_training, y_testing
-
-
-    # X_train_correct = np.load('X_train_correct.npy')
-    # X_test_correct = np.load('X_test_correct.npy')
-    # y_train_correct = np.load('y_train_correct.npy')
-    # y_test_correct = np.load('y_test_correct.npy')
-    # return X_train_correct, X_test_correct, y_train_correct, y_test_correct
-# main()    
