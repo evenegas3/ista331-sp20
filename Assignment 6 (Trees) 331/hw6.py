@@ -58,7 +58,7 @@ def make_and_test_tree(train_X, train_y, test_X, test_y, m_depth):
 
 def get_regression_frame():
     return pd.read_csv('bikes.csv')
-    
+
 def get_regression_X_and_y(data):
     lis = [x for x in range(len(data))]
     dropped = ['casual', 'cnt', 'datetime', 'registered']
@@ -71,7 +71,7 @@ def get_regression_X_and_y(data):
 
     return train_x, test_x, train_y, test_y
 
-def make_depth_plot(x, y, max_depth, model_type):
+def make_depth_plot(X, y, max_depth, model_type):
     averages = np.zeros(max_depth) 
     error = np.zeros(max_depth) 
 
@@ -81,12 +81,12 @@ def make_depth_plot(x, y, max_depth, model_type):
         if model_type == 'forest':
             model = RandomForestRegressor(n_estimators=25, max_depth=1)
         
-        score = cross_val_score(model, x, y, cv = 10, scoring='neg_mean_squared_error')
+        score = cross_val_score(model, X, y, cv = 10, scoring='neg_mean_squared_error')
         averages[i-1] = np.average(score)
         error[i-1] = np.std(score) / np.sqrt(10)
 
     plt.title('Neg MSE vs. depth, model_type = {}'.format(model_type))
-    plt.errorbar(np.range(1, max_depth + 1), averages, yerr=error, color='black', capsize=5)
+    plt.errorbar(np.arange(1, max_depth + 1), averages, yerr=error, color='black', capsize=5)
     plt.xlabel('max_depth')
     plt.ylabel('Negative mean squared error')
 
@@ -94,21 +94,21 @@ def make_depth_plot(x, y, max_depth, model_type):
 
 def main():
     pass
-    # train, test = get_classification_frames()
+    train_df, test_df = get_classification_frames()
 
-    train_X = pd.read_pickle('train_X_correct.pkl')
-    train_y = pd.read_pickle('train_y_correct.pkl')
-    test_X = pd.read_pickle('test_X_correct.pkl')
-    test_y = pd.read_pickle('test_y_correct.pkl')
+    # train_X = pd.read_pickle('train_X_correct.pkl')
+    # train_y = pd.read_pickle('train_y_correct.pkl')
+    # test_X = pd.read_pickle('test_X_correct.pkl')
+    # test_y = pd.read_pickle('test_y_correct.pkl')
     
-    matrix_1_correct = pd.read_pickle('matrix_1_correct.pkl')
-    matrix_3_correct = pd.read_pickle('matrix_3_correct.pkl')
+    # matrix_1_correct = pd.read_pickle('matrix_1_correct.pkl')
+    # matrix_3_correct = pd.read_pickle('matrix_3_correct.pkl')
 
-    np.random.seed(23)
-
-    make_and_test_tree(train_X, train_y, test_X, test_y, 1)
     # np.random.seed(23)
-    # matrix_3 = make_and_test_tree(train_X, train_y, test_X, test_y, 3)
+
+    # make_and_test_tree(train_X, train_y, test_X, test_y, 1)
+    # # np.random.seed(23)
+    # # matrix_3 = make_and_test_tree(train_X, train_y, test_X, test_y, 3)
 
 
 
