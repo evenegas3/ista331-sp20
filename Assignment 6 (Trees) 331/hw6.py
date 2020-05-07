@@ -27,34 +27,16 @@ def get_X_and_y(df):
 
     return x, y
 
-def plot_confusion_matrix(train_X, train_y, test_X, test_y, m_depth):
-    pass
-    # txls = np.random
-    # matrix_1_correct = pd.read_pickle('matrix_1_correct.pkl')
-    # print('want')
-    # print(matrix_1_correct)
-    # print('\n')
-
-    # cls_tree = DecisionTreeClassifier(max_depth = m_depth)
-    # # cls_forest = RandomForestClassifier(n_estimators = 500, max_depth = 4)
-    # cls_forest = DecisionTreeClassifier(max_depth = m_depth)
-
-    # cls_tree.fit(train_X, train_y)
-    # cls_forest.fit(train_X, train_y)
-
-    # preds_tree = cls_tree.predict(test_X)
-    # preds_forest = cls_forest.predict(test_X)
-
-    # print("Confusion matrix for tree:")
-    # print(confusion_matrix(preds_tree, test_y))
-    # print("\nConfusion matrix for forest:")
-    # print(confusion_matrix(preds_forest, test_y))
 def make_and_test_tree(train_X, train_y, test_X, test_y, m_depth):
     cls_tree = DecisionTreeClassifier(max_depth = m_depth)
     cls_tree.fit(train_X, train_y)
     y_predict = cls_tree.predict(test_X)
 
     return confusion_matrix(test_y, y_predict)
+
+def plot_confusion_matrix(train_X, train_y, test_X, test_y, m_depth):
+    cm = make_and_test_tree(train_X, train_y, test_X, test_y, m_depth)
+    plt.matshow(cm, cmap=plt.cm.grey)
 
 def get_regression_frame():
     return pd.read_csv('bikes.csv')
@@ -101,33 +83,6 @@ def compare_regressors(train_X, train_y, test_X, test_y, lis):
     tree_rmse = np.sqrt(np.sum((lis[0].predict(test_X) - test_y) ** 2) / len(test_y))
     rfr_rmse = np.sqrt(np.sum((lis[1].predict(test_X) - test_y) ** 2) / len(test_y))
 
-
-    # dtr, rfr = lis
-    # tree_mse = np.sum(dtr.predict(train_X-train_y)**2) / len(train_y)
-    # rfr_mse = np.sum(rfr.predict(train_X-train_y)**2) / len(train_y)
-
-    # tree_r2 = 1-tree_mse/np.var(train_y)
-    # forest_r2 = 1-rfr_mse/np.var(train_y)
-
-    # tree_rmse = np.sum(dtr.predict(test_X-test_y)**2) / len(test_X)
-    # rfr_rmse = np.sum(rfr.predict(test_X-test_y)**2) / len(test_y)
-
-    # print("""-----------------------------------\
-    #     Model type:   {}\
-    #         Depth:      {}\
-    #             R^2:        {}
-    # Testing RMSE:{}
-    # -----------------------------------
-    # Model type:   {}
-    # Depth:      {}
-    # R^2:        {}
-    # Testing RMSE:{}
-    
-    # """.format('DecisionTreeRegressor', dtr.max_depth,np.round(tree_r2, 4), np.round(tree_mse,4),
-    # 'RandomForestRegressor', rfr.max_depth,np.round(forest_r2, 4), np.round(rfr_mse,4)
-
-    # ))
-
     print('-----------------------------------')
     print('Model type:  ','DecisionTreeRegressor')
     print('Depth:       ',lis[0].max_depth)
@@ -140,16 +95,13 @@ def compare_regressors(train_X, train_y, test_X, test_y, lis):
     print('R^2:         ',np.round(forest_r2, 4))
     print('Testing RMSE:',np.round(rfr_rmse,4))
 
-
-
     return None
-
-
 
 def main():
     pass
-    train_df, test_df = get_classification_frames()
-
+    train_out, test_out = get_classification_frames()
+    regress_df = get_regression_frame()
+    train_x, test_x, train_y, test_y = get_regression_X_and_y(regress_df)
 
 
 if  __name__ == "__main__":
