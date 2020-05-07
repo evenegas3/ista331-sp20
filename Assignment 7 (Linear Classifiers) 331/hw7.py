@@ -7,15 +7,22 @@ import scipy.io as sio
 from sklearn.utils import shuffle
 import pandas as pd
 import string
+"""
+Erick Venegas
+ISTA 331
+04-30-20
+SL: Sean Current
+Collab: Yolanda Terrazas
+"""
 
 def get_data():
     """
-    this function takes no arguments and returns two arrays: X, a 70, 000×784 2D array, and
-    y, a 1D array with 70,000 elements.
+    This function takes no arguments and returns two arrays: X a 70000×784 2D array, and
+    y a 1D array with 70,000 elements.
 
     PARAMETERS: N/A
 
-    RETURNS: x
+    RETURNS: x an array 70000x784, y an a one-dimensional array of 70000 elements
     """
     d = sio.loadmat('mnist-original.mat')
     x = d['data'].T
@@ -24,6 +31,17 @@ def get_data():
     return x, y
 
 def get_train_and_test_sets(X, y):
+    """
+    this function takes X and y as created by the previous function. The first 60,000 instances of each are for training,
+    the rest for testing. The function breaks both into separate training and testing X’s and y’s.
+    Use np.random.permutation to get a shuffled sequence of indices and then uses these indices to shuffle the training X’s and y’s.
+    It then returns the training X, the testing X, the training y, and the testing y, in that order.
+
+    PARAMETERS: X -- a two-dimensional data array of size 70000x784
+                y -- a one-dimensional data array of 70000 elements
+
+    RETURNS: returns the training X, the testing X, the training y, and the testing y, in that order
+    """
     limit = 60000
     x_train = X[:limit]
     x_test = X[limit:]
@@ -35,11 +53,17 @@ def get_train_and_test_sets(X, y):
 
 def train_to_data(train_x, train_y, model_name):
     """
-    this function takes a training X, a training y, and a string containing the name
+    This function takes a training X, a training y, and a string containing the name
     of the model. If the model name is ’SGD’, make a SGDClassifier with max iter = 200 and a
     tolerance of 0.001 (Remember the default SGDClassifier is a linear SVM). If the model name is
     ’SVM’, make a SVC with kernel = ’poly’. Otherwise, make a LogisticRegression with multi class
     = ’multinomial’ and solver = ’lbfgs’.
+
+    PARAMETER: train_x -- a dataset of x training data
+               train_y -- a dataset pf y training data
+               model_name -- a string, used to determine what model to use
+        
+    RETURNS: clas -- data with a fitted model
     """
     if model_name == 'SGD':
         clas = SGDClassifier(alpha=0.0001, tol=0.001, max_iter=200)
@@ -54,9 +78,15 @@ def train_to_data(train_x, train_y, model_name):
 
 def get_confusion_matrix(model, x, y):
     """
-    this function takes a model, an X, and a y. Use the model’s predict method
+    This function takes a model, an X, and a y. Use the model’s predict method
     to obtain predictions for this X and make a confusion matrix out of the y vector and your predictions.
     Return the matrix
+
+    PARAMETERS: model -- model, a model used to fit data
+                x --
+                y --
+    
+    RETURN: a confusion matrix consisting of predicted x and y dataset
     """
     return confusion_matrix(y, model.predict(x))
 

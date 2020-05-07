@@ -10,6 +10,8 @@ Erick Venegas
 ISTA 331
 04-28-20
 Sean Current
+
+Collab: Yolanda Terrazas
 """
 
 def get_classification_frames():
@@ -48,10 +50,10 @@ def make_and_test_tree(train_X, train_y, test_X, test_y, m_depth):
     and a maximum depth. Initialize and fit a DecisionTreeClassifier on the training data
     with the given maximum depth. Return a confusion matrix measuring the accuracy of the model on the testing data.
 
-    PARAMETERS: train_X -- 
-                train_y --
-                test_y -- 
-                m_depth -- an integer, 
+    PARAMETERS: train_X -- a dataset of training x data
+                train_y -- a dataset of training y data
+                test_y -- a dataset of testing y data
+                m_depth -- an integer, max depth used to calc. accuracy
 
     RETURNS: a confusion matrix of measuring the accuracy of the model on the testing data
     """
@@ -67,13 +69,15 @@ def plot_confusion_matrix(train_X, train_y, test_X, test_y, m_depth):
     Get a confusion matrix from the previous function and display it using plt.matshow.
     Pass the parameter cmap = plt.cm.gray. Don’t call plt.show() in this function; you’ll call it later in main.
 
-    PARAMETERS: train_X -- 
-                train_y --
-                test_X --
-                m_depth --
+    PARAMETERS: train_X -- a dataset consisting of training x data
+                train_y -- a dataset consisting of training y data
+                test_X -- a dataset consisting of test x data
+                m_depth -- an integer, consists of the max depth for 
+                accuracy(used as a parameter in make_and_test() function)
     """
     cm = make_and_test_tree(train_X, train_y, test_X, test_y, m_depth)
-    plt.matshow(cm, cmap=plt.cm.grey)
+    plt.matshow(cm, cmap=plt.cm.gray)
+    print('$$$$$$$')
 
 def get_regression_frame():
     """
@@ -91,12 +95,14 @@ def get_regression_X_and_y(data):
     and testing X and y. Use np.random.choice to select a random sample of 15000
     instances to be the training set. Take the rest to be the testing set.
 
-    PARAMETERS: data --
+    PARAMETERS: data -- data, a dataframe made from the 'bikes.csv' file
 
-    PARAMETERS: train_x --
-                test_x --
-                train_y --
-                test_y --
+    PARAMETERS: train_x -- a dataset of training data for x
+                test_x -- a dataset of training data for x
+                train_y -- a dataset of training data for y
+                test_y -- dataset of test data for y
+
+    RETURNS: training X, testing X, training y, testing y in that order.
     """
     lis = [x for x in range(len(data))]
     dropped = ['casual', 'cnt', 'datetime', 'registered']
@@ -117,12 +123,12 @@ def make_depth_plot(X, y, n, key):
     RandomForestRegressor if the keyword is ’forest’. Use cross val score with cv = 5 (five-fold-cross-validation)
     and scoring = ’neg mean squared error’ to evaluate the model on the training data. 
 
-    PARAMETERS: X --
-                y --
-                n --
-                key --
+    PARAMETERS: X -- dataset of x data
+                y -- dataset of y data
+                n -- an integer, the max_depth for accuracy
+                key -- the model type, determine whether you want
     
-    RETURNS: 
+    RETURNS: The max score at position i
     """
     lis = []
     for i in range(1, n+1):
@@ -147,9 +153,13 @@ def compare_regressors(train_X, train_y, test_X, test_y, lis):
     DecisionTreeRegressor and a RandomForestRegressor (already fit to the training data).
     For each model, compute its MSE on the training set.
 
-    PARAMETERS:
+    PARAMETERS: train_X -- a dataset consisting of training_x data
+                train_y -- a dataset consisting of training_y data
+                test_X -- a dataset consisting of testing_x data
+                test_y -- a dataset consisting of testing_y data
+                lis -- a list containing DecisionTreeRegressor and RandomForestRegressor
 
-    RETURNS:
+    RETURNS: N/A
     """
     tree_mse = np.sum((lis[0].predict(train_X) - train_y) ** 2) / len(train_y)
     rfr_mse = np.sum((lis[1].predict(train_X) - train_y) ** 2) / len(train_y)
@@ -175,19 +185,33 @@ def compare_regressors(train_X, train_y, test_X, test_y, lis):
     return None
 
 def main():
-    pass
-    train_out, test_out = get_classification_frames()
-    # data = get_regression_frame()
+    train, test = get_classification_frames()
+    train_x = get_X_and_y(train)[0]
+    train_y = get_X_and_y(train)[1]
 
+    test_x = get_X_and_y(test)[0]
+    test_y = get_X_and_y(test)[1]
 
-
-    # train_x, test_x, train_y, test_y = get_regression_X_and_y(data)
-
-    # make_depth_plot('tree')
+    plot_confusion_matrix(train_x, train_y, test_x, test_y, 1)
+    plt.show()
+    # plot_confusion_matrix(train_x, train_y, test_x, test_y, 5)
     # plt.show()
-    # make_depth_plot('forest')
+    # regression = get_regression_frame()
+    # trX, teX, trY, teY = get_regression_X_and_y(regression)
+    # x = make_depth_plot(teX, teY, 15, 'tree')
     # plt.show()
+    # x2 = make_depth_plot(teX, teY, 15, 'forest')
+    # plt.show()
+    # dec = DecisionTreeRegressor(max_depth=x)
+    # dec.fit(teX, teY)
+    # ran = RandomForestRegressor(max_depth=x2)
+    # ran.fit(teX, teY)
+    # l = []
+    # l.append(dec)
+    # l.append(ran)
+    # compare_regressors(trX, trY, teX, teY, l)
 
 
 if  __name__ == "__main__":
     main()
+    # print('$$$$$')
